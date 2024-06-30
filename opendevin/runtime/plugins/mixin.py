@@ -13,14 +13,16 @@ class SandboxProtocol(Protocol):
     def initialize_plugins(self) -> bool: ...
 
     def execute(
-            self, cmd: str, stream: bool = False
+        self, cmd: str, stream: bool = False
     ) -> tuple[int, str | CancellableStream]: ...
 
     def copy_to(self, host_src: str, sandbox_dest: str, recursive: bool = False): ...
 
 
 def _source_bashrc(sandbox: SandboxProtocol):
-    exit_code, output = sandbox.execute('source /opendevin/bash.bashrc && source ~/.bashrc')
+    exit_code, output = sandbox.execute(
+        'source /opendevin/bash.bashrc && source ~/.bashrc'
+    )
     if exit_code != 0:
         raise RuntimeError(
             f'Failed to source /opendevin/bash.bashrc and ~/.bashrc with exit code {exit_code} and output: {output}'
