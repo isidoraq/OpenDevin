@@ -68,15 +68,16 @@ class PluginMixin:
                 if isinstance(output, CancellableStream):
                     total_output = ''
                     for line in output:
-                        if line.endswith('\n'):
-                            line = line[:-1]
+                        # Removes any trailing whitespace, including \n and \r\n
+                        line = line.rstrip()
                         logger.debug(line)
-                        total_output += line
+                        # Avoid text from lines running into each other
+                        total_output += line + ' '
                     _exit_code = output.exit_code()
                     output.close()
                     if _exit_code != 0:
                         raise RuntimeError(
-                            f'Failed to initialize plugin {requirement.name} with exit code {_exit_code} and output: {total_output}'
+                            f'Failed to initialize plugin {requirement.name} with exit code {_exit_code} and output: {total_output.strip()}'
                         )
                     logger.info(f'Plugin {requirement.name} initialized successfully')
                 else:
