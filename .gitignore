@@ -207,6 +207,7 @@ logs
 /_test_workspace
 /debug
 cache
+/opensearch-2.6.0
 
 # configuration
 config.toml
