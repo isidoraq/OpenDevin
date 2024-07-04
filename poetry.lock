@@ -2779,13 +2779,13 @@ types-tqdm = "*"
 
 [[package]]
 name = "litellm"
-version = "1.41.3"
+version = "1.41.6"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.41.3-py3-none-any.whl", hash = "sha256:50b20805e6892ef57ee5833764ae77bc2021042814b4bdbd89b3744d4b84bb02"},
-    {file = "litellm-1.41.3.tar.gz", hash = "sha256:2178f4a9b605603295f6aebf623e0a4dd45c3b595090fa37c606f1c1e04d2121"},
+    {file = "litellm-1.41.6-py3-none-any.whl", hash = "sha256:7f31cc345ab8aef53b928595c0471de3ee3d859824c2da6b5ae7841f62a7029b"},
+    {file = "litellm-1.41.6.tar.gz", hash = "sha256:ac0c4bc51b64ce38d6290d6e9b5683c19a6bcb76b4ca64381e286256c013d39a"},
 ]
 
 [package.dependencies]
@@ -4189,13 +4189,13 @@ sympy = "*"
 
 [[package]]
 name = "openai"
-version = "1.35.8"
+version = "1.35.10"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.7.1"
 files = [
-    {file = "openai-1.35.8-py3-none-any.whl", hash = "sha256:69d5b0f47f0c806d5da83fb0f84c147661395226d7f79acc78aa1d9b8c635887"},
-    {file = "openai-1.35.8.tar.gz", hash = "sha256:3f6101888bb516647edade74c503f2b937b8bab73408e799d58f2aba68bbe51c"},
+    {file = "openai-1.35.10-py3-none-any.whl", hash = "sha256:962cb5c23224b5cbd16078308dabab97a08b0a5ad736a4fdb3dc2ffc44ac974f"},
+    {file = "openai-1.35.10.tar.gz", hash = "sha256:85966949f4f960f3e4b239a659f9fd64d3a97ecc43c44dc0a044b5c7f11cccc6"},
 ]
 
 [package.dependencies]
@@ -6588,8 +6588,8 @@ tqdm = "*"
 [package.source]
 type = "git"
 url = "https://github.com/OpenDevin/SWE-bench.git"
-reference = "xw/attempt-fix-django-parsing"
-resolved_reference = "c61bc104ae5113dd58c228004e7b52293ed73bbd"
+reference = "HEAD"
+resolved_reference = "4498af933679c518df6d1f8485864f72afc21500"
 
 [[package]]
 name = "sympy"
