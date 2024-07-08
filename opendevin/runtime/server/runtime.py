@@ -3,7 +3,6 @@ from opendevin.events.action import (
     AgentRecallAction,
     BrowseInteractiveAction,
     BrowseURLAction,
-    CmdKillAction,
     CmdRunAction,
     FileReadAction,
     FileWriteAction,
@@ -36,27 +35,15 @@ class ServerRuntime(Runtime):
         self.file_store = LocalFileStore(config.workspace_base)
 
     async def run(self, action: CmdRunAction) -> Observation:
-        return self._run_command(action.command, background=action.background)
-
-    async def kill(self, action: CmdKillAction) -> Observation:
-        cmd = self.sandbox.kill_background(action.command_id)
-        return CmdOutputObservation(
-            content=f'Background command with id {action.command_id} has been killed.',
-            command_id=action.command_id,
-            command=cmd.command,
-            exit_code=0,
-        )
+        return self._run_command(action.command)
 
     async def run_ipython(self, action: IPythonRunCellAction) -> Observation:
         obs = self._run_command(
             ("cat > /tmp/opendevin_jupyter_temp.py <<'EOL'\n" f'{action.code}\n' 'EOL'),
-            background=False,
         )
 
         # run the code
-        obs = self._run_command(
-            ('cat /tmp/opendevin_jupyter_temp.py | execute_cli'), background=False
-        )
+        obs = self._run_command('cat /tmp/opendevin_jupyter_temp.py | execute_cli')
         output = obs.content
         if 'pip install' in action.code:
             print(output)
@@ -74,12 +61,10 @@ class ServerRuntime(Runtime):
                             "cat > /tmp/opendevin_jupyter_temp.py <<'EOL'\n"
                             f'{restart_kernel}\n'
                             'EOL'
-                        ),
-                        background=False,
+                        )
                     )
                     obs = self._run_command(
-                        ('cat /tmp/opendevin_jupyter_temp.py | execute_cli'),
-                        background=False,
+                        'cat /tmp/opendevin_jupyter_temp.py | execute_cli'
                     )
                     output = '[Package installed successfully]'
                     if "{'status': 'ok', 'restart': True}" != obs.content.strip():
@@ -100,11 +85,9 @@ class ServerRuntime(Runtime):
                                 f'{action.kernel_init_code}\n'
                                 'EOL'
                             ),
-                            background=False,
                         )
                         obs = self._run_command(
                             'cat /tmp/opendevin_jupyter_init.py | execute_cli',
-                            background=False,
                         )
             elif (
                 is_single_package
@@ -134,13 +117,7 @@ class ServerRuntime(Runtime):
     async def recall(self, action: AgentRecallAction) -> Observation:
         return NullObservation('')
 
-    def _run_command(self, command: str, background=False) -> Observation:
-        if background:
-            return self._run_background(command)
-        else:
-            return self._run_immediately(command)
-
-    def _run_immediately(self, command: str) -> Observation:
+    def _run_command(self, command: str) -> Observation:
         try:
             exit_code, output = self.sandbox.execute(command)
             if 'pip install' in command:
@@ -159,13 +136,3 @@ class ServerRuntime(Runtime):
             )
         except UnicodeDecodeError:
             return ErrorObservation('Command output could not be decoded as utf-8')
-
-    def _run_background(self, command: str) -> Observation:
-        bg_cmd = self.sandbox.execute_in_background(command)
-        content = f'Background command started. To stop it, send a `kill` action with command_id {bg_cmd.pid}'
-        return CmdOutputObservation(
-            content=content,
-            command_id=bg_cmd.pid,
-            command=command,
-            exit_code=0,
-        )
